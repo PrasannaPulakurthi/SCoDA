@@ -181,4 +181,34 @@ def main():
     # Train
     for epoch in range(1, args.epochs + 1):
         mmd_avg, loss_avg, acc_src_avg, nce_avg = train_one_epoch(
-            svhn_loader, mni_
+            svhn_loader, mnist_loader, model, mmd_loss, optimizer, lr_scheduler, epoch, trade_off=args.trade_off
+        )
+
+        # Validation
+        acc_src = validate(svhn_val_loader, model, DEVICE)
+        acc_tgt = validate(mnist_val_loader, model, DEVICE)
+
+        # Save
+        history["epoch"].append(epoch)
+        history["train_loss"].append(loss_avg)
+        history["src_val_acc"].append(acc_src)
+        history["tgt_val_acc"].append(acc_tgt)
+        history["mmd_loss"].append(mmd_avg)
+        history["contrastive_loss"].append(nce_avg)
+        pd.DataFrame(history).to_csv(osp.join(args.logdir, "training_log.csv"), index=False)
+
+        torch.save(model.state_dict(), last_path)
+        if acc_tgt > best_tgt:
+            torch.save(model.state_dict(), best_path)
+            best_tgt = acc_tgt
+
+        print(f"[Epoch {epoch}] tgt_acc={acc_tgt:.2f} (best={best_tgt:.2f})")
+
+    # Final test on best checkpoint
+    model.load_state_dict(torch.load(best_path, map_location="cpu"))
+    final_acc = validate(mnist_val_loader, model, DEVICE)
+    print(f"[FINAL] Best target Acc@1 = {final_acc:.2f}")
+
+
+if __name__ == "__main__":
+    main()
