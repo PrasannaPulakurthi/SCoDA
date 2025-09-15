@@ -1,0 +1,7 @@
+torch>=2.2
+torchvision>=0.17
+tqdm>=4.65
+pandas>=2.2
+tllib>=0.4.7
+timm>=0.9.2
+Pillow>=10.0
