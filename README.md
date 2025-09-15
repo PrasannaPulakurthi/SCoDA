@@ -1,5 +1,5 @@
 # Bridging Domain Shifts Through Self-contrastive Learning And Distribution Alignment  
-**IEEE ICIP 2025 (manuscript)**  
+**IEEE ICIP 2025**  
 Repository: SCoDA (SVHN → MNIST)
 
 **Manuscript:** https://ieeexplore.ieee.org/document/11084279
