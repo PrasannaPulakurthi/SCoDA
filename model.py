@@ -7,7 +7,7 @@ from typing import Tuple
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchvision.models import resnet18
+from torchvision.models import resnet50,ResNet50_Weights
 
 
 class ImageClassifier(nn.Module):
@@ -20,7 +20,7 @@ class ImageClassifier(nn.Module):
 
     def __init__(self, num_classes: int, bottleneck_dim: int = 256, finetune_backbone: bool = True):
         super().__init__()
-        backbone = resnet18(pretrained="IMAGENET1K_V1")
+        backbone = resnet50(weights=ResNet50_Weights.DEFAULT)
         backbone.out_features = backbone.fc.in_features
         backbone.fc = nn.Identity()
         self.backbone = backbone
