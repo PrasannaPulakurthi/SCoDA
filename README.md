@@ -52,7 +52,7 @@ pip install -r requirements.txt
 
 ---
 
-## 9. Acknowledgements
+## 5. Acknowledgements
 
 We gratefully acknowledge:
 
