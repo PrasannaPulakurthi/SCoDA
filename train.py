@@ -57,7 +57,7 @@ def set_seed(seed: int):
     )
 
 
-def build_dataloaders(batch_size: int):
+def build_dataloaders(batch_size: int,num_workers:int):
     """
     Build SVHN->MNIST paired dataloaders with equalized dataset lengths.
     """
@@ -75,10 +75,10 @@ def build_dataloaders(batch_size: int):
     mnist_train = Subset(mnist_train, range(n))
     svhn_train = Subset(svhn_train, range(n))
 
-    mnist_loader = DataLoader(mnist_train, batch_size=batch_size, shuffle=True, num_workers=4, drop_last=True)
-    svhn_loader   = DataLoader(svhn_train,  batch_size=batch_size, shuffle=True, num_workers=4, drop_last=True)
-    mnist_val_loader = DataLoader(mnist_val, batch_size=batch_size, shuffle=False, num_workers=4)
-    svhn_val_loader  = DataLoader(svhn_val,  batch_size=batch_size, shuffle=False, num_workers=4)
+    mnist_loader = DataLoader(mnist_train, batch_size=batch_size, shuffle=True, num_workers=num_workers, drop_last=True)
+    svhn_loader   = DataLoader(svhn_train,  batch_size=batch_size, shuffle=True, num_workers=num_workers, drop_last=True)
+    mnist_val_loader = DataLoader(mnist_val, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+    svhn_val_loader  = DataLoader(svhn_val,  batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
     return svhn_loader, mnist_loader, svhn_val_loader, mnist_val_loader
 
@@ -151,6 +151,7 @@ def main():
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--logdir", type=str, default="runs_s2m")
     parser.add_argument("--val_epoch", type=int, default=5)
+    parser.add_argument("--num_workers", type=int, default=8)
     args = parser.parse_args()
 
     os.makedirs(args.logdir, exist_ok=True)
@@ -158,7 +159,7 @@ def main():
     cudnn.benchmark = True
 
     # Data
-    svhn_loader, mnist_loader, svhn_val_loader, mnist_val_loader = build_dataloaders(args.batch_size)
+    svhn_loader, mnist_loader, svhn_val_loader, mnist_val_loader = build_dataloaders(args.batch_size,args.num_workers)
 
     # Model
     model = ImageClassifier(num_classes=10, bottleneck_dim=args.bottleneck_dim, finetune_backbone=not args.scratch).to(DEVICE)
