@@ -40,8 +40,8 @@ class ImageClassifier(nn.Module):
         """
         return [
             {"params": self.backbone.parameters(), "lr": 1.0 * base_lr},
-            {"params": self.bottleneck.parameters(), "lr": 10.0 * base_lr},
-            {"params": self.classifier.parameters(), "lr": 10.0 * base_lr},
+            {"params": self.bottleneck.parameters(), "lr": 2.0 * base_lr},
+            {"params": self.classifier.parameters(), "lr": 2.0 * base_lr},
         ]
 
     def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:

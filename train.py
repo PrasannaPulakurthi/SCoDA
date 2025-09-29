@@ -117,7 +117,7 @@ def train_one_epoch(
         nce_src = info_nce_pairwise(fs1, fs2)
         nce_tgt = info_nce_pairwise(ft1, ft2)
         nce = nce_src+nce_tgt
-        loss = ce + (mmd + nce) * trade_off
+        loss = ce + mmd + 0.5*nce
 
         # Metrics
         acc1, = accuracy(logits_s, ys, topk=(1,))
@@ -130,7 +130,7 @@ def train_one_epoch(
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        lr_scheduler.step()
+        # lr_scheduler.step()
 
         loop.set_description(f"Epoch {epoch}")
         loop.set_postfix(loss=total_losses.avg, mmd=transfer_losses.avg, nce=contrastive_losses.avg, acc=cls_accs.avg)
