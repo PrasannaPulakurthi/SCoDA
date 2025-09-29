@@ -39,9 +39,9 @@ class ImageClassifier(nn.Module):
         and standard LR on new layers.
         """
         return [
-            {"params": self.backbone.parameters(), "lr": (0.1 if self.finetune_backbone else 1.0) * base_lr},
-            {"params": self.bottleneck.parameters(), "lr": 1.0 * base_lr},
-            {"params": self.classifier.parameters(), "lr": 1.0 * base_lr},
+            {"params": self.backbone.parameters(), "lr": 1.0 * base_lr},
+            {"params": self.bottleneck.parameters(), "lr": 10.0 * base_lr},
+            {"params": self.classifier.parameters(), "lr": 10.0 * base_lr},
         ]
 
     def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
